@@ -2,6 +2,11 @@ package error_
 
 import "errors"
 
+
+func New(text string) error {
+	return errors.New(text)
+}
+
 func As[T error](err error) (out T, ok bool) {
 	return out, errors.As(err, &out)
 }
