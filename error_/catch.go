@@ -15,3 +15,9 @@ func (c *Catcher) Run(routine func()) {
 		routine()
 	}
 }
+
+func (c *Catcher) In(other *Catcher) {
+	if c.Err == nil && other != nil {
+		c.Err = other.Err
+	}
+}

@@ -2,8 +2,8 @@ package try
 
 import "github.com/m4gshm/expressions/error_"
 
-func Get[T any](catch error_.Catcher, routine func() T) (out T) {
-	if catch.Err == nil {
+func Get[T any](catch *error_.Catcher, routine func() T) (out T) {
+	if catch != nil && catch.Err == nil {
 		return routine()
 	}
 	return out
@@ -26,6 +26,13 @@ func ConvertCatch[I, O any](catch error_.Catcher, element I, converter func(I) (
 }
 
 func Convert[I, O any](catch error_.Catcher, element I, converter func(I) O) (out O) {
+	if catch.Err != nil {
+		return out
+	}
+	return converter(element)
+}
+
+func Run[I, O any](catch error_.Catcher, element I, converter func(I) O) (out O) {
 	if catch.Err != nil {
 		return out
 	}
