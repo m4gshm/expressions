@@ -9,7 +9,7 @@ func Get[T any](catch *error_.Catcher, routine func() T) (out T) {
 	return out
 }
 
-func GetCatch[T any](catch error_.Catcher, routine func() (T, error)) (out T) {
+func Gett[T any](catch *error_.Catcher, routine func() (T, error)) (out T) {
 	if catch.Err != nil {
 		return out
 	}
@@ -17,7 +17,7 @@ func GetCatch[T any](catch error_.Catcher, routine func() (T, error)) (out T) {
 	return out
 }
 
-func ConvertCatch[I, O any](catch error_.Catcher, element I, converter func(I) (O, error)) (out O) {
+func Convertt[I, O any](catch *error_.Catcher, element I, converter func(I) (O, error)) (out O) {
 	if catch.Err != nil {
 		return out
 	}
@@ -25,14 +25,14 @@ func ConvertCatch[I, O any](catch error_.Catcher, element I, converter func(I) (
 	return out
 }
 
-func Convert[I, O any](catch error_.Catcher, element I, converter func(I) O) (out O) {
+func Convert[I, O any](catch *error_.Catcher, element I, converter func(I) O) (out O) {
 	if catch.Err != nil {
 		return out
 	}
 	return converter(element)
 }
 
-func Run[I, O any](catch error_.Catcher, element I, converter func(I) O) (out O) {
+func Run[I, O any](catch *error_.Catcher, element I, converter func(I) O) (out O) {
 	if catch.Err != nil {
 		return out
 	}

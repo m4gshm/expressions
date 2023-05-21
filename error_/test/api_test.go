@@ -11,6 +11,7 @@ import (
 	errors "github.com/m4gshm/expressions/error_"
 	"github.com/m4gshm/expressions/error_/catch"
 	"github.com/m4gshm/expressions/error_/try"
+	"github.com/m4gshm/expressions/expr/get"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,28 +35,30 @@ func Test_As(t *testing.T) {
 
 func Test_Run(t *testing.T) {
 	catcher, userTempDir := catch.One(os.MkdirTemp(os.TempDir(), strconv.Itoa(rand.Int())))
-
-	outputFileName := try.Get(catcher, func() string { return filepath.Join(userTempDir, "out.txt") })
-
 	var file *os.File
-	catcher.Run(func() { catcher, file = catch.One(os.Create(outputFileName)) })
+	catcher.Run(func() { catcher, file = catch.One(os.Create(filepath.Join(userTempDir, "out.txt"))) })
 	if file != nil {
 		defer file.Close()
 	}
-
 	assert.NoError(t, catcher.Err)
 }
 
 func Test_Convert(t *testing.T) {
 	catcher, userTempDir := catch.One(os.MkdirTemp(os.TempDir(), strconv.Itoa(rand.Int())))
-
-	outputFileName := try.Get(catcher, func() string { return filepath.Join(userTempDir, "out.txt") })
-
-	file := try.ConvertCatch(*catcher, outputFileName, os.Create)
-
+	file := try.Convertt(catcher, filepath.Join(userTempDir, "out.txt"), os.Create)
 	if file != nil {
 		defer file.Close()
 	}
-
 	assert.NoError(t, catcher.Err)
+}
+
+func Test_NoCatch(t *testing.T) {
+	file, err := func() (*os.File, error) {
+		userTempDir, err := os.MkdirTemp(os.TempDir(), strconv.Itoa(rand.Int()))
+		return get.If_(err == nil, func() (*os.File, error) { return os.Create(filepath.Join(userTempDir, "out.txt")) }).ElseErr(err)
+	}()
+	if file != nil {
+		defer file.Close()
+	}
+	assert.NoError(t, err)
 }
