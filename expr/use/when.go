@@ -101,6 +101,14 @@ func (w When[T]) Eval() (out T, ok bool) {
 	return out, false
 }
 
+// Or returns the current condition 'w' if true, or 'another' otherwise
+func (w When[T]) Or(other When[T]) When[T] {
+	if w.condition {
+		return w
+	}
+	return other
+}
+
 // Opt wraps the specified optional result
 func (w When[T]) Opt(optional opt.Optional[T]) When[T] {
 	if w.condition {
