@@ -1,6 +1,6 @@
 package use
 
-import "github.com/m4gshm/expressions/expr/get"
+import "github.com/m4gshm/expressions/opt"
 
 // When is if...else expression builder
 type When[T any] struct {
@@ -101,17 +101,20 @@ func (w When[T]) Eval() (out T, ok bool) {
 	return out, false
 }
 
-// Opt wraps optional result of a method/function
-func (w When[T]) Opt(element T, ok bool) When[T] {
-	return newWhen(ok, element)
-}
-
-// OptGet wraps optional result of the specified function
-func (w When[T]) OptGet(f func() (T, bool)) When[T] {
+// Opt wraps the specified optional result
+func (w When[T]) Opt(optional opt.Optional[T]) When[T] {
 	if w.condition {
 		return w
 	}
-	e, ok := f()
+	return Opt(optional)
+}
+
+// OptGet wraps the resulf of the specified 'optional' function
+func (w When[T]) OptGet(optional func() opt.Optional[T]) When[T] {
+	if w.condition {
+		return w
+	}
+	e, ok := optional().Get()
 	return newWhen(ok, e)
 }
 

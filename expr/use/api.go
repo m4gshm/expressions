@@ -1,6 +1,8 @@
 // Package use provides conditional expression builders
 package use
 
+import "github.com/m4gshm/expressions/opt"
+
 // If builds use.If(condition, tru).Else(fals) expression builder.
 // Looks like val := use.If(condition, valOnTrue).Else(defaltVal) tha can be rewrited by:
 //
@@ -15,7 +17,8 @@ func If[T any](condition bool, tru T) When[T] {
 }
 
 // Opt wraps optional result of a method/function
-func Opt[T any](element T, ok bool) When[T] {
+func Opt[T any](optional opt.Optional[T]) When[T] {
+	element, ok := optional.Get()
 	return newWhen(ok, element)
 }
 
