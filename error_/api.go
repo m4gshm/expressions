@@ -1,7 +1,8 @@
 package error_
 
-import "errors"
-
+import (
+	"errors"
+)
 
 func New(text string) error {
 	return errors.New(text)
@@ -16,4 +17,17 @@ func Check[T error](err error, predicate func(T) bool) bool {
 		return predicate(out)
 	}
 	return false
+}
+
+func Catch[T any](element T, err error) Tuple[T] {
+	return Tuple[T]{element, err}
+}
+
+func Convert[From, To any](optional Tuple[From], converter func(From) To) Tuple[To] {
+	var to To
+	err := optional.err
+	if err == nil {
+		to = converter(optional.val)
+	}
+	return Tuple[To]{to, err}
 }
