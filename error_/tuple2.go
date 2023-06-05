@@ -21,3 +21,10 @@ func (o Tuple2[F, S]) Err() error {
 func (o Tuple2[F, S]) Ok() bool {
 	return o.err != nil
 }
+
+func (o Tuple2[F, S]) Run(routine func(F, S)) Tuple2[F, S] {
+	if o.Ok() {
+		routine(o.first, o.second)
+	}
+	return o
+}

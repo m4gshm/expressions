@@ -20,3 +20,10 @@ func (o Tuple[T]) Err() error {
 func (o Tuple[T]) Ok() bool {
 	return o.err != nil
 }
+
+func (o Tuple[T]) Run(routine func(T)) Tuple[T] {
+	if o.Ok() {
+		routine(o.val)
+	}
+	return o
+}
