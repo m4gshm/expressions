@@ -8,11 +8,11 @@ import (
 	"strconv"
 	"testing"
 
-	errors "github.com/m4gshm/expressions/error_"
-	"github.com/m4gshm/expressions/error_/catch"
-	"github.com/m4gshm/expressions/error_/try"
-	"github.com/m4gshm/expressions/expr/get"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/m4gshm/expressions/error_"
+	"github.com/m4gshm/expressions/error_/catch"
+	"github.com/m4gshm/expressions/expr/get"
 )
 
 type SomeErr struct {
@@ -28,7 +28,7 @@ var _ error = SomeErr{}
 
 func Test_As(t *testing.T) {
 	expected := SomeErr{Status: 100}
-	e, ok := errors.As[SomeErr](expected)
+	e, ok := error_.As[SomeErr](expected)
 	assert.True(t, ok)
 	assert.Equal(t, expected, e)
 }
@@ -44,12 +44,14 @@ func Test_Run(t *testing.T) {
 }
 
 func Test_Convert(t *testing.T) {
-	catcher, userTempDir := catch.One(os.MkdirTemp(os.TempDir(), strconv.Itoa(rand.Int())))
-	file := try.Convertt(catcher, filepath.Join(userTempDir, "out.txt"), os.Create)
+	file, err := error_.Convertt(error_.Convert(error_.Catch(os.MkdirTemp(os.TempDir(), strconv.Itoa(rand.Int()))),
+		func(userTempDir string) string { return filepath.Join(userTempDir, "out.txt") }), os.Create,
+	).Get()
+
 	if file != nil {
 		defer file.Close()
 	}
-	assert.NoError(t, catcher.Err)
+	assert.NoError(t, err)
 }
 
 func Test_NoCatch(t *testing.T) {
