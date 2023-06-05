@@ -27,3 +27,12 @@ func (o Tuple[T]) Run(routine func(T)) Tuple[T] {
 	}
 	return o
 }
+
+func (o Tuple[T]) RunErr(routine func(T) error) Tuple[T] {
+	if o.Ok() {
+		if err := routine(o.val); err != nil {
+			return Tuple[T]{o.val, err}
+		}
+	}
+	return o
+}

@@ -28,3 +28,12 @@ func (o Tuple2[F, S]) Run(routine func(F, S)) Tuple2[F, S] {
 	}
 	return o
 }
+
+func (o Tuple2[F, S]) RunErr(routine func(F, S) error) Tuple2[F, S] {
+	if o.Ok() {
+		if err := routine(o.first, o.second); err != nil {
+			return Tuple2[F, S]{o.first, o.second, err}
+		}
+	}
+	return o
+}
