@@ -5,11 +5,11 @@ type Tuple[T any] struct {
 	err error
 }
 
-func (o Tuple[T]) Gett() (T, error) {
+func (o Tuple[T]) Get() (T, error) {
 	return o.val, o.err
 }
 
-func (o Tuple[T]) Get() T {
+func (o Tuple[T]) Val() T {
 	return o.val
 }
 
