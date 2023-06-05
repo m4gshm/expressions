@@ -34,6 +34,15 @@ func Convert[From, To any](optional Tuple[From], converter func(From) To) Tuple[
 	return Tuple[To]{to, err}
 }
 
+func Convertt[From, To any](optional Tuple[From], converter func(From) (To, error)) Tuple[To] {
+	var to To
+	err := optional.err
+	if err == nil {
+		to, err = converter(optional.val)
+	}
+	return Tuple[To]{to, err}
+}
+
 func Zip[F, S any](first Tuple[F], second Tuple[S]) Tuple2[F, S] {
 	var f F
 	var s S
