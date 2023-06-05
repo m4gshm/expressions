@@ -25,6 +25,10 @@ func Catch[T any](element T, err error) Tuple[T] {
 	return Tuple[T]{element, err}
 }
 
+func Catch2[F, S any](first F, second S, err error) Tuple2[F, S] {
+	return Tuple2[F, S]{first, second, err}
+}
+
 func Convert[From, To any](optional Tuple[From], converter func(From) To) Tuple[To] {
 	var to To
 	err := optional.err
@@ -39,6 +43,24 @@ func Convertt[From, To any](optional Tuple[From], converter func(From) (To, erro
 	err := optional.err
 	if err == nil {
 		to, err = converter(optional.val)
+	}
+	return Tuple[To]{to, err}
+}
+
+func Narrow[F, S, To any](optional Tuple2[F, S], narrower func(F, S) To) Tuple[To] {
+	var to To
+	err := optional.err
+	if err == nil {
+		to = narrower(optional.first, optional.second)
+	}
+	return Tuple[To]{to, err}
+}
+
+func Narroww[F, S, To any](optional Tuple2[F, S], narrower func(F, S) (To, error)) Tuple[To] {
+	var to To
+	err := optional.err
+	if err == nil {
+		to, err = narrower(optional.first, optional.second)
 	}
 	return Tuple[To]{to, err}
 }

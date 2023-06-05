@@ -6,11 +6,11 @@ type Tuple2[F, S any] struct {
 	err    error
 }
 
-func (o Tuple2[F, S]) Get() (F, S, error) {
+func (o Tuple2[F, S]) Gett() (F, S, error) {
 	return o.first, o.second, o.err
 }
 
-func (o Tuple2[F, S]) Vals() (F, S) {
+func (o Tuple2[F, S]) Get() (F, S) {
 	return o.first, o.second
 }
 
@@ -29,7 +29,7 @@ func (o Tuple2[F, S]) Run(routine func(F, S)) Tuple2[F, S] {
 	return o
 }
 
-func (o Tuple2[F, S]) RunErr(routine func(F, S) error) Tuple2[F, S] {
+func (o Tuple2[F, S]) Runn(routine func(F, S) error) Tuple2[F, S] {
 	if o.Ok() {
 		if err := routine(o.first, o.second); err != nil {
 			return Tuple2[F, S]{o.first, o.second, err}
