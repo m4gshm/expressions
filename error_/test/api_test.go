@@ -11,7 +11,6 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/m4gshm/expressions/error_"
-	"github.com/m4gshm/expressions/error_/catch"
 	"github.com/m4gshm/expressions/expr/get"
 )
 
@@ -31,16 +30,6 @@ func Test_As(t *testing.T) {
 	e, ok := error_.As[SomeErr](expected)
 	assert.True(t, ok)
 	assert.Equal(t, expected, e)
-}
-
-func Test_Run(t *testing.T) {
-	catcher, userTempDir := catch.One(os.MkdirTemp(os.TempDir(), strconv.Itoa(rand.Int())))
-	var file *os.File
-	catcher.Run(func() { catcher, file = catch.One(os.Create(filepath.Join(userTempDir, "out.txt"))) })
-	if file != nil {
-		defer file.Close()
-	}
-	assert.NoError(t, catcher.Err)
 }
 
 func Test_Convert(t *testing.T) {
